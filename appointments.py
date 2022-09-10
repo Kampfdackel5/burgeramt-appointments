@@ -7,7 +7,7 @@ import time
 import winsound
 
 
-# With new Bürgerämter ID's as of 10.09.2021
+# With new Bürgeramt ID's as of 10.09.2022
 ALL_BUERGERAMTS = (
     122208, 122210, 122217, 122219, 122226, 122227, 122231, 122238, 122243,
     122246, 122251, 122252, 122254, 122257, 122260, 122262, 122267, 122271,
@@ -22,14 +22,15 @@ ALL_BUERGERAMTS = (
 )
 
 SERVICE_ID = 120686 #ID For Anmeldung
-# Use 120335 for Abmeldung                <---- Untested
+# Use 120335 for Abmeldung                <---- Untested (You can also do the Abmeldung by e-mail)
 # Use 120703 for Personalausweis (ID)     <---- Untested
 # Use 121151 for Pass (Passport)          <---- Untested
 
 BEGIN_DATE = "2022-09-10"
 END_DATE = "2021-10-30"
 
-Beep_On_All = True   #With this set to "true", a sound is played even when the appointment is not within the specified range.
+Beep_On_All = True   #With this set to "True" a sound is played, even when the date is not within the specified range.
+Print_All = True     #With this set to "True" all available dates will be printed to the console, even when the date is not within the specified range.
 
 # Without a user agent, you will get a 403
 headers = {
@@ -56,6 +57,7 @@ def get_appointment_dates(buergeramt_ids=ALL_BUERGERAMTS, service_id=SERVICE_ID)
     today = datetime.now().date()
 
     # Current month and next month
+    # I will not expand this, because I would have to work with timestamps and I want to keep my sanity. Many dates this far away often have appointments available anyways.
     available_dates = []
     for index, month_widget in enumerate(month_widgets):
         # Get a list of available dates for each calendar widget. The first widget shows the current month.
@@ -69,7 +71,7 @@ def get_appointment_dates(buergeramt_ids=ALL_BUERGERAMTS, service_id=SERVICE_ID)
         duration = 1000  # Set Duration To 1000 ms == 5 second
         winsound.Beep(frequency, duration)
     
-    if len(available_dates) > 0:
+    if Print_All and len(available_dates) > 0:
         string_available_dates = ','.join(available_dates)
         print("Available dates: " + string_available_dates)
     else:
@@ -80,9 +82,10 @@ def get_appointment_dates(buergeramt_ids=ALL_BUERGERAMTS, service_id=SERVICE_ID)
 
 def appointment_dates(dates):
     dates = [d.strftime('%Y-%m-%dT%H:%M:%S') for d in dates]
+    
     if len(dates) > 0:
         string_dates = ','.join(dates)
-        print("Appointment found: " + string_dates) #Prints the appointment dates to the console.
+        print("Appointment found: " + string_dates) #Prints the appointment dates fitting the specification to the console.
     else:
         print("No appointments found. Continuing search...")
 
@@ -102,4 +105,4 @@ def observe(limit, polling_delay):
 
 
 if __name__ == "__main__":
-    observe(timedelta(days=30), polling_delay=60)
+    observe(timedelta(days=30), polling_delay=30)
