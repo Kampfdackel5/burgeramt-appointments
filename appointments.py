@@ -74,7 +74,7 @@ def get_appointment_dates(buergeramt_ids=ALL_BUERGERAMTS, service_id=SERVICE_ID)
     if Print_All==True and len(available_dates) > 0:
         string_available_dates = ','.join(available_dates)
         print("Available dates: " + string_available_dates)
-    else:
+    elif Print_All==True:
         print("No available dates found. Continuing search...")
 
     return available_dates
