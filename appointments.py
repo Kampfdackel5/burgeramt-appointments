@@ -30,7 +30,7 @@ BEGIN_DATE = "2022-09-10"
 END_DATE = "2021-10-30"
 
 Beep_On_All = True   #With this set to "True" a sound is played, even when the date is not within the specified range.
-Print_All = True     #With this set to "True" all available dates will be printed to the console, even when the date is not within the specified range.
+Print_All = False     #With this set to "True" all available dates will be printed to the console, even when the date is not within the specified range.
 
 # Without a user agent, you will get a 403
 headers = {
@@ -66,12 +66,12 @@ def get_appointment_dates(buergeramt_ids=ALL_BUERGERAMTS, service_id=SERVICE_ID)
         available_days = [int(link.find('a').text) for link in available_day_links]
         available_dates += [today.replace(month=displayed_month, day=available_day) for available_day in available_days]
 
-    if Beep_On_All and len(available_dates) > 0:
+    if Beep_On_All==True and len(available_dates) > 0:
         frequency = 2500  # Set Frequency To 2500 Hertz
         duration = 1000  # Set Duration To 1000 ms == 5 second
         winsound.Beep(frequency, duration)
     
-    if Print_All and len(available_dates) > 0:
+    if Print_All==True and len(available_dates) > 0:
         string_available_dates = ','.join(available_dates)
         print("Available dates: " + string_available_dates)
     else:
